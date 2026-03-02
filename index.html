@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Invitation</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: #fffaf7;
+  color: #333;
+}
+
+/* HERO */
+.hero {
+  height: 60vh;
+  position: relative;
+  background: url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* DARK OVERLAY */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* HERO CONTENT */
+.hero-content {
+  position: relative;
+  color: white;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3rem;
+}
+
+/* COUNTDOWN */
+.countdown {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.countdown div {
+  background: rgba(255, 255, 255, 0.85); /* visible background */
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* SECTION */
+section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+/* EVENT + VIDEO + RSVP */
+.event-rsvp {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.event-details, .rsvp, .video-box {
+  background: #f3e8e3;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  align-content: center;
+}
+
+/* VIDEO */
+.video-box video {
+  width: 100%;
+  aspect-ratio: 9/16;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.contact {
+  margin-top: 10px;
+}
+
+.contact a {
+  color: #d4a373;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* MAP */
+.map iframe {
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+  border: none;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #d4a373;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+/* SLIDER */
+.slider {
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slider img {
+  width: 300px;
+  margin-right: 10px;
+  border-radius: 10px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .event-rsvp {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Oyinkansola & Oluwadamilare</h1>
+    <p>We're Getting Married 💍</p>
+    <p>July 04, 2026</p>
+
+    <div class="countdown">
+      <div><span id="days"></span><br>Days</div>
+      <div><span id="hours"></span><br>Hours</div>
+      <div><span id="minutes"></span><br>Minutes</div>
+      <div><span id="seconds"></span><br>Seconds</div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENT + VIDEO + RSVP -->
+<section class="event-rsvp">
+
+  <div class="event-details">
+    <h2>Event Details</h2>
+    <p><strong>Date:</strong> July 04, 2026</p>
+    <p><strong>Time:</strong> 12:00 PM</p>
+    <p><strong>Venue:</strong> Hotel De Eskay Hall</p>
+  </div>
+
+  <div class="video-box">
+    <h2>How to Get There</h2>
+    <video controls>
+      <source src="your-video.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="rsvp">
+    <h2>RSVP</h2>
+
+    <div class="contact">
+      <p><strong>Mr. Ade</strong></p>
+      <a href="tel:08012345678">08012345678</a>
+    </div>
+
+    <div class="contact">
+      <p><strong>Mrs. Kemi</strong></p>
+      <a href="tel:08087654321">08087654321</a>
+    </div>
+
+    <div class="contact">
+      <p><strong>Tunde</strong></p>
+      <a href="tel:08123456789">08123456789</a>
+    </div>
+
+    <div class="contact">
+      <p><strong>Funmi</strong></p>
+      <a href="tel:08198765432">08198765432</a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MAP -->
+<section class="map">
+  <h2>Location</h2>
+  <iframe src="https://www.google.com/maps?q=Hotel+De+Eskay+Hall&output=embed"></iframe>
+
+  <button onclick="openDirections()">Get Directions</button>
+</section>
+
+<!-- GALLERY -->
+<section>
+  <h2>Our Moments</h2>
+
+  <div class="slider">
+    <div class="slider-track" id="sliderTrack">
+      <img src="https://images.unsplash.com/photo-1">
+      <img src="https://images.unsplash.com/photo-2">
+      <img src="https://images.unsplash.com/photo-3">
+      <img src="https://images.unsplash.com/photo-4">
+      <img src="https://images.unsplash.com/photo-5">
+      <img src="https://images.unsplash.com/photo-6">
+      <img src="https://images.unsplash.com/photo-7">
+    </div>
+  </div>
+
+  <!-- SECOND COUNTDOWN -->
+  <div class="countdown" style="margin-top:40px;">
+    <div><span id="days2"></span><br>Days</div>
+    <div><span id="hours2"></span><br>Hours</div>
+    <div><span id="minutes2"></span><br>Minutes</div>
+    <div><span id="seconds2"></span><br>Seconds</div>
+  </div>
+
+</section>
+
+<footer>
+  <p>Thank you for celebrating with us ❤️</p>
+</footer>
+
+<script>
+// COUNTDOWN
+const weddingDate = new Date("July 04, 2026 12:00:00").getTime();
+
+function updateCountdown(prefix) {
+  const now = new Date().getTime();
+  const distance = weddingDate - now;
+
+  document.getElementById(prefix+"days").innerText = Math.floor(distance/(1000*60*60*24));
+  document.getElementById(prefix+"hours").innerText = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+  document.getElementById(prefix+"minutes").innerText = Math.floor((distance%(1000*60*60))/(1000*60));
+  document.getElementById(prefix+"seconds").innerText = Math.floor((distance%(1000*60))/1000);
+
+  document.getElementById(prefix+"days2").innerText = Math.floor(distance/(1000*60*60*24));
+  document.getElementById(prefix+"hours2").innerText = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+  document.getElementById(prefix+"minutes2").innerText = Math.floor((distance%(1000*60*60))/(1000*60));
+  document.getElementById(prefix+"seconds2").innerText = Math.floor((distance%(1000*60))/1000);
+}
+
+setInterval(()=>{
+  updateCountdown("");
+  updateCountdown("2");
+},1000);
+
+// SLIDER
+let index = 0;
+const track = document.getElementById("sliderTrack");
+
+setInterval(() => {
+  index++;
+  track.style.transform = `translateX(-${index * 310}px)`;
+  if(index >= 4) index = 0;
+}, 3000);
+
+// MAP
+function openDirections() {
+  window.open("https://maps.app.goo.gl/KqJqTPWnYC2Zt137A");
+}
+</script>
+
+</body>
+</html>
