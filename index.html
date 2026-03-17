@@ -16,7 +16,7 @@
 }
 
 body {
-  background: #fffaf7;
+  background: #d9e3cf;
   color: #333;
 }
 
@@ -82,11 +82,12 @@ section {
 }
 
 .event-details, .rsvp, .video-box {
-  background: #f3e8e3;
+  background: #c5e5ae;
   padding: 20px;
   border-radius: 10px;
   width: 300px;
   align-content: center;
+  box-shadow: 3px 3px 13px;
 }
 
 /* VIDEO */
@@ -102,7 +103,7 @@ section {
 }
 
 .contact a {
-  color: #d4a373;
+  color: #42b06e;
   text-decoration: none;
   font-weight: 600;
 }
@@ -118,7 +119,7 @@ section {
 button {
   margin-top: 10px;
   padding: 10px 20px;
-  background: #d4a373;
+  background: #42b06e;
   color: white;
   border: none;
   border-radius: 5px;
@@ -158,6 +159,7 @@ button {
     <h1>Oyinkansola & Oluwadamilare</h1>
     <p>We're Getting Married 💍</p>
     <p>July 04, 2026</p>
+    <p>#ADUN'26</p>
 
     <div class="countdown">
       <div><span id="days"></span><br>Days</div>
@@ -174,14 +176,15 @@ button {
   <div class="event-details">
     <h2>Event Details</h2>
     <p><strong>Date:</strong> July 04, 2026</p>
-    <p><strong>Time:</strong> 12:00 PM</p>
+    <p><strong>Engagement Time:</strong> 08:00 AM</p>
+    <p><strong>Reception Time:</strong> 01:00 PM</p>
     <p><strong>Venue:</strong> Hotel De Eskay Hall</p>
   </div>
 
   <div class="video-box">
     <h2>How to Get There</h2>
     <video controls>
-      <source src="your-video.mp4" type="video/mp4">
+      <source src="vid.mp4" type="video/mp4">
     </video>
   </div>
 
@@ -189,25 +192,14 @@ button {
     <h2>RSVP</h2>
 
     <div class="contact">
-      <p><strong>Mr. Ade</strong></p>
-      <a href="tel:08012345678">08012345678</a>
+      <p><strong>Pesedie</strong></p>
+      <a href="tel:09025958168">09025958168</a>
     </div>
 
     <div class="contact">
-      <p><strong>Mrs. Kemi</strong></p>
-      <a href="tel:08087654321">08087654321</a>
+      <p><strong>Mercy</strong></p>
+      <a href="tel:08144268408">08144268408</a>
     </div>
-
-    <div class="contact">
-      <p><strong>Tunde</strong></p>
-      <a href="tel:08123456789">08123456789</a>
-    </div>
-
-    <div class="contact">
-      <p><strong>Funmi</strong></p>
-      <a href="tel:08198765432">08198765432</a>
-    </div>
-
   </div>
 
 </section>
@@ -226,13 +218,16 @@ button {
 
   <div class="slider">
     <div class="slider-track" id="sliderTrack">
-      <img src="https://images.unsplash.com/photo-1">
-      <img src="https://images.unsplash.com/photo-2">
-      <img src="https://images.unsplash.com/photo-3">
-      <img src="https://images.unsplash.com/photo-4">
-      <img src="https://images.unsplash.com/photo-5">
-      <img src="https://images.unsplash.com/photo-6">
-      <img src="https://images.unsplash.com/photo-7">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
+      <img src="IV.jpeg">
     </div>
   </div>
 
@@ -247,12 +242,13 @@ button {
 </section>
 
 <footer>
-  <p>Thank you for celebrating with us ❤️</p>
+  <marquee><p>Thank you for celebrating with us ❤️ #ADUN'26 ❤️</p></marquee>
+
 </footer>
 
 <script>
 // COUNTDOWN
-const weddingDate = new Date("July 04, 2026 12:00:00").getTime();
+const weddingDate = new Date("July 04, 2026 08:00:00").getTime();
 
 function updateCountdown(prefix) {
   const now = new Date().getTime();
