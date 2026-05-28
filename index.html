@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedding Invitation</title>
+<title>Wedding Invitation - Continuous Image Slider</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -60,7 +60,7 @@ body {
 }
 
 .countdown div {
-  background: rgba(255, 255, 255, 0.85); /* visible background */
+  background: rgba(255, 255, 255, 0.85);
   color: #333;
   padding: 10px 15px;
   border-radius: 10px;
@@ -123,22 +123,31 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 }
 
-/* SLIDER */
+/* SLIDER - CONTINUOUS INFINITE LOOP (NO RESET, NO PACING ISSUES) */
 .slider {
   overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .slider-track {
   display: flex;
-  transition: transform 0.5s ease;
+  gap: 20px;
+  width: max-content;
+  will-change: transform;
 }
 
 .slider img {
   width: 300px;
-  margin-right: 10px;
+  height: 400px;
+  object-fit: cover;
   border-radius: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
 /* MOBILE */
@@ -146,6 +155,13 @@ button {
   .event-rsvp {
     flex-direction: column;
     align-items: center;
+  }
+  .slider img {
+    width: 250px;
+    height: 333px;
+  }
+  .slider-track {
+    gap: 15px;
   }
 }
 </style>
@@ -184,7 +200,7 @@ button {
   <div class="video-box">
     <h2>How to Get There</h2>
     <video controls>
-      <source src="vid.mp4" type="video/mp4" autoplay loop>
+      <source src="vid.mp4" type="video/mp4">
     </video>
   </div>
 
@@ -212,37 +228,12 @@ button {
   <button onclick="openDirections()">Get Directions</button>
 </section>
 
-<!-- GALLERY -->
+<!-- GALLERY - CONTINUOUS INFINITE LOOP SLIDER (FIXED: NO RESET, SMOOTH SCROLL) -->
 <section>
   <h2>Our Moments</h2>
 
   <div class="slider">
-    <div class="slider-track" id="sliderTrack">
-      <img src="1.jpeg">
-      <img src="2.jpeg">
-      <img src="3.jpeg">
-   <!--<img src="4.jpeg">-->
-      <img src="IV.jpeg">
-      <img src="5.jpeg">
-      <img src="6.jpeg">
-      <img src="7.jpeg">
-      <img src="8.jpeg">
-      <img src="9.jpeg">
-      <img src="10.jpeg">
-      <img src="11.jpeg">
-      <img src="12.jpeg">
-      <img src="13.jpeg">
-      <img src="14.jpeg">
-      <img src="15.jpeg">
-      <img src="16.jpeg">
-      <img src="17.jpeg">
-      <img src="18.jpeg">
-      <img src="19.jpeg">
-      <img src="20.jpeg">
-      <img src="21.jpeg">
-      <img src="22.jpeg">
-      <img src="23.jpeg">
-    </div>
+    <div class="slider-track" id="sliderTrack"></div>
   </div>
 
   <!-- SECOND COUNTDOWN -->
@@ -257,47 +248,199 @@ button {
 
 <footer>
   <marquee><p>Thank you for celebrating with us ❤️ #ADUN'26 ❤️</p></marquee>
-
 </footer>
 
 <script>
-// COUNTDOWN
+// COUNTDOWN TIMER (unchanged)
 const weddingDate = new Date("July 04, 2026 08:00:00").getTime();
 
-function updateCountdown(prefix) {
+function updateCountdown() {
   const now = new Date().getTime();
   const distance = weddingDate - now;
-
-  document.getElementById(prefix+"days").innerText = Math.floor(distance/(1000*60*60*24));
-  document.getElementById(prefix+"hours").innerText = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-  document.getElementById(prefix+"minutes").innerText = Math.floor((distance%(1000*60*60))/(1000*60));
-  document.getElementById(prefix+"seconds").innerText = Math.floor((distance%(1000*60))/1000);
-
-  document.getElementById(prefix+"days2").innerText = Math.floor(distance/(1000*60*60*24));
-  document.getElementById(prefix+"hours2").innerText = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-  document.getElementById(prefix+"minutes2").innerText = Math.floor((distance%(1000*60*60))/(1000*60));
-  document.getElementById(prefix+"seconds2").innerText = Math.floor((distance%(1000*60))/1000);
+  
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+  document.getElementById("days").innerText = days;
+  document.getElementById("hours").innerText = hours;
+  document.getElementById("minutes").innerText = minutes;
+  document.getElementById("seconds").innerText = seconds;
+  
+  document.getElementById("days2").innerText = days;
+  document.getElementById("hours2").innerText = hours;
+  document.getElementById("minutes2").innerText = minutes;
+  document.getElementById("seconds2").innerText = seconds;
 }
 
-setInterval(()=>{
-  updateCountdown("");
-  updateCountdown("2");
-},1000);
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
-// SLIDER
-let index = 0;
-const track = document.getElementById("sliderTrack");
-
-setInterval(() => {
-  index++;
-  track.style.transform = `translateX(-${index * 310}px)`;
-  if(index >= 9) index = 0;
-}, 3000);
-
-// MAP
+// MAP DIRECTIONS (unchanged)
 function openDirections() {
   window.open("https://maps.app.goo.gl/KqJqTPWnYC2Zt137A");
 }
+
+// ============================================================
+// CONTINUOUS INFINITE IMAGE SLIDER - SEAMLESS LOOP
+// No reset jumps, no pacing delays, never restarts abruptly
+// ============================================================
+
+// List of all your wedding images (same as original order)
+const imageList = [
+  "1.jpeg", "2.jpeg", "3.jpeg", "IV.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg",
+  "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg", "13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg",
+  "17.jpeg", "18.jpeg", "19.jpeg", "20.jpeg", "21.jpeg", "22.jpeg", "23.jpeg"
+];
+
+// Get the slider track element
+const track = document.getElementById("sliderTrack");
+
+// Build the infinite track: 3 copies of all images for perfectly seamless looping
+// Why 3? This ensures that while scrolling, there's always enough buffer to reset position
+// without any visible empty space or jerky restart. The transition is mathematically invisible.
+function buildInfiniteTrack() {
+  track.innerHTML = "";
+  
+  // Add 3 full copies of all images to create a seamless infinite effect
+  // The repetition means we can reset the scroll position without the user ever noticing
+  for (let copy = 0; copy < 3; copy++) {
+    imageList.forEach(src => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = "Wedding memory";
+      // Error handling - if image doesn't exist, use a placeholder
+      img.onerror = function() {
+        this.src = "https://placehold.co/300x400/d9e3cf/42b06e?text=Love+Story";
+      };
+      track.appendChild(img);
+    });
+  }
+}
+
+// Initialize the slider with images
+buildInfiniteTrack();
+
+// Get the width of a single image including gap
+function getImageFullWidth() {
+  const images = track.querySelectorAll("img");
+  if (images.length === 0) return 320; // fallback width + gap
+  const imgWidth = images[0].offsetWidth;
+  const gap = 20; // matches CSS gap: 20px
+  return imgWidth + gap;
+}
+
+// Calculate total width of ONE complete set of images
+function getOneSetWidth() {
+  const images = track.querySelectorAll("img");
+  const setSize = imageList.length;
+  if (images.length === 0) return setSize * 320;
+  const imgWidth = images[0].offsetWidth;
+  const gap = 20;
+  return setSize * (imgWidth + gap);
+}
+
+// CONTINUOUS ANIMATION using requestAnimationFrame
+// This creates a buttery-smooth infinite scroll with NO reset pauses
+let currentPosition = 0;
+let animationId = null;
+let isAnimating = true;
+let lastTimestamp = 0;
+const PIXELS_PER_SECOND = 80; // Smooth, gentle pace - no rushing before loop
+
+// Function to animate the slider continuously
+function animateSlider(timestamp) {
+  if (!isAnimating) return;
+  
+  if (!lastTimestamp) {
+    lastTimestamp = timestamp;
+    animationId = requestAnimationFrame(animateSlider);
+    return;
+  }
+  
+  // Calculate time difference in seconds
+  const deltaTime = Math.min(0.033, (timestamp - lastTimestamp) / 1000); // Cap at 33ms max
+  if (deltaTime > 0) {
+    // Move forward by pixels per second
+    currentPosition += PIXELS_PER_SECOND * deltaTime;
+    
+    // Get width of one full set of images
+    const oneSetWidth = getOneSetWidth();
+    
+    // SEAMLESS RESET: When we've scrolled past one full set, subtract that width
+    // This creates an infinite loop WITHOUT any visible jump because the track has
+    // 3 copies of images - the content looks identical before and after reset
+    if (oneSetWidth > 0 && currentPosition >= oneSetWidth) {
+      currentPosition -= oneSetWidth;
+      // Apply the new position instantly - no transition, no visible glitch
+      // The user never sees a "reset" because the images are identical on both sides
+    }
+    
+    // Apply the transform for smooth motion
+    track.style.transform = `translateX(-${currentPosition}px)`;
+  }
+  
+  lastTimestamp = timestamp;
+  animationId = requestAnimationFrame(animateSlider);
+}
+
+// Start the continuous animation
+function startSlider() {
+  isAnimating = true;
+  lastTimestamp = 0;
+  if (animationId) cancelAnimationFrame(animationId);
+  animationId = requestAnimationFrame(animateSlider);
+}
+
+// Pause animation on hover (optional - improves user experience)
+// Users can hover to see images clearly, then it continues smoothly
+const sliderContainer = document.querySelector(".slider");
+if (sliderContainer) {
+  sliderContainer.addEventListener("mouseenter", () => {
+    isAnimating = false;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  });
+  
+  sliderContainer.addEventListener("mouseleave", () => {
+    isAnimating = true;
+    lastTimestamp = 0;
+    animationId = requestAnimationFrame(animateSlider);
+  });
+}
+
+// Handle window resize - recalculate positions to maintain smoothness
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    // Get current one set width after resize
+    const oneSetWidth = getOneSetWidth();
+    // Ensure current position doesn't exceed bounds
+    if (oneSetWidth > 0 && currentPosition >= oneSetWidth) {
+      currentPosition = currentPosition % oneSetWidth;
+      track.style.transform = `translateX(-${currentPosition}px)`;
+    }
+  }, 150);
+});
+
+// Start the infinite slider when page loads
+startSlider();
+
+// Also rebuild track if needed (ensures images are loaded and widths correct)
+window.addEventListener("load", () => {
+  // Small delay to ensure all images are rendered
+  setTimeout(() => {
+    // Reset position to avoid any initial jump
+    currentPosition = 0;
+    track.style.transform = "translateX(0px)";
+    // Restart animation with fresh timestamps
+    startSlider();
+  }, 100);
+});
 </script>
 
 </body>
