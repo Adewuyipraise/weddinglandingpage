@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>#Adun26</title>
+<title>Wedding Invitation</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -20,26 +20,42 @@ body {
   color: #333;
 }
 
-/* HERO */
+/* HERO WITH VIDEO BACKGROUND */
 .hero {
   height: 60vh;
+  min-height: 500px;
   position: relative;
-  background: url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow: hidden;
 }
 
-/* DARK OVERLAY */
+/* BACKGROUND VIDEO */
+.hero-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translateX(-50%) translateY(-50%);
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* DARK OVERLAY on top of video */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
 }
 
-/* HERO CONTENT */
+/* HERO CONTENT - stays above video and overlay */
 .hero-content {
   position: relative;
   color: white;
@@ -126,7 +142,7 @@ button {
   cursor: pointer;
 }
 
-/* SLIDER - CONTINUOUS INFINITE LOOP (NO RESET, NO PACING ISSUES) */
+/* SLIDER - CONTINUOUS INFINITE LOOP */
 .slider {
   overflow: hidden;
   position: relative;
@@ -163,14 +179,24 @@ button {
   .slider-track {
     gap: 15px;
   }
+  .hero {
+    min-height: 400px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
+<!-- HERO WITH VIDEO BACKGROUND -->
 <section class="hero">
+  <!-- Background Video - Replace the src with your own video file or URL -->
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="herovid.mp4" type="video/mp4">
+    <!-- Fallback: if video fails to load, you can add an image fallback -->
+    Your browser does not support the video tag.
+  </video>
+  
   <div class="hero-content">
     <h1>Oyinkansola & Oluwadamilare</h1>
     <p>We're Getting Married 💍</p>
@@ -228,7 +254,7 @@ button {
   <button onclick="openDirections()">Get Directions</button>
 </section>
 
-<!-- GALLERY - CONTINUOUS INFINITE LOOP SLIDER (FIXED: NO RESET, SMOOTH SCROLL) -->
+<!-- GALLERY - CONTINUOUS INFINITE LOOP SLIDER -->
 <section>
   <h2>Our Moments</h2>
 
@@ -251,7 +277,7 @@ button {
 </footer>
 
 <script>
-// COUNTDOWN TIMER (unchanged)
+// COUNTDOWN TIMER
 const weddingDate = new Date("July 04, 2026 08:00:00").getTime();
 
 function updateCountdown() {
@@ -277,19 +303,18 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-// MAP DIRECTIONS (unchanged)
+// MAP DIRECTIONS
 function openDirections() {
   window.open("https://maps.app.goo.gl/KqJqTPWnYC2Zt137A");
 }
 
 // ============================================================
 // CONTINUOUS INFINITE IMAGE SLIDER - SEAMLESS LOOP
-// No reset jumps, no pacing delays, never restarts abruptly
 // ============================================================
 
-// List of all your wedding images (same as original order)
+// List of all your wedding images
 const imageList = [
-  "1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "IV.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg",
+  "1.jpeg", "2.jpeg", "3.jpeg", "IV.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg",
   "9.jpeg", "10.jpeg", "11.jpeg", "12.jpeg", "13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg",
   "17.jpeg", "18.jpeg", "19.jpeg", "20.jpeg", "21.jpeg", "22.jpeg", "23.jpeg"
 ];
@@ -297,18 +322,16 @@ const imageList = [
 // Get the slider track element
 const track = document.getElementById("sliderTrack");
 
-// Build the infinite track: 3 copies of all images for perfectly seamless looping
+// Build infinite track with 3 copies for seamless looping
 function buildInfiniteTrack() {
   track.innerHTML = "";
   
-  // Add 3 full copies of all images to create a seamless infinite effect
-  // The repetition means we can reset the scroll position without the user ever noticing
+  // Add 3 full copies of all images
   for (let copy = 0; copy < 3; copy++) {
     imageList.forEach(src => {
       const img = document.createElement("img");
       img.src = src;
       img.alt = "Wedding memory";
-      // Error handling - if image doesn't exist, use a placeholder
       img.onerror = function() {
         this.src = "https://placehold.co/300x400/d9e3cf/42b06e?text=Love+Story";
       };
@@ -317,19 +340,16 @@ function buildInfiniteTrack() {
   }
 }
 
-// Initialize the slider with images
 buildInfiniteTrack();
 
-// Get the width of a single image including gap
 function getImageFullWidth() {
   const images = track.querySelectorAll("img");
-  if (images.length === 0) return 320; // fallback width + gap
+  if (images.length === 0) return 320;
   const imgWidth = images[0].offsetWidth;
-  const gap = 20; // matches CSS gap: 20px
+  const gap = 20;
   return imgWidth + gap;
 }
 
-// Calculate total width of ONE complete set of images
 function getOneSetWidth() {
   const images = track.querySelectorAll("img");
   const setSize = imageList.length;
@@ -339,15 +359,12 @@ function getOneSetWidth() {
   return setSize * (imgWidth + gap);
 }
 
-// CONTINUOUS ANIMATION using requestAnimationFrame
-// This creates a buttery-smooth infinite scroll with NO reset pauses
 let currentPosition = 0;
 let animationId = null;
 let isAnimating = true;
 let lastTimestamp = 0;
-const PIXELS_PER_SECOND = 80; // Smooth, gentle pace - no rushing before loop
+const PIXELS_PER_SECOND = 80;
 
-// Function to animate the slider continuously
 function animateSlider(timestamp) {
   if (!isAnimating) return;
   
@@ -357,25 +374,16 @@ function animateSlider(timestamp) {
     return;
   }
   
-  // Calculate time difference in seconds
-  const deltaTime = Math.min(0.033, (timestamp - lastTimestamp) / 1000); // Cap at 33ms max
+  const deltaTime = Math.min(0.033, (timestamp - lastTimestamp) / 1000);
   if (deltaTime > 0) {
-    // Move forward by pixels per second
     currentPosition += PIXELS_PER_SECOND * deltaTime;
     
-    // Get width of one full set of images
     const oneSetWidth = getOneSetWidth();
     
-    // SEAMLESS RESET: When we've scrolled past one full set, subtract that width
-    // This creates an infinite loop WITHOUT any visible jump because the track has
-    // 3 copies of images - the content looks identical before and after reset
     if (oneSetWidth > 0 && currentPosition >= oneSetWidth) {
       currentPosition -= oneSetWidth;
-      // Apply the new position instantly - no transition, no visible glitch
-      // The user never sees a "reset" because the images are identical on both sides
     }
     
-    // Apply the transform for smooth motion
     track.style.transform = `translateX(-${currentPosition}px)`;
   }
   
@@ -383,7 +391,6 @@ function animateSlider(timestamp) {
   animationId = requestAnimationFrame(animateSlider);
 }
 
-// Start the continuous animation
 function startSlider() {
   isAnimating = true;
   lastTimestamp = 0;
@@ -391,8 +398,6 @@ function startSlider() {
   animationId = requestAnimationFrame(animateSlider);
 }
 
-// Pause animation on hover (optional - improves user experience)
-// Users can hover to see images clearly, then it continues smoothly
 const sliderContainer = document.querySelector(".slider");
 if (sliderContainer) {
   sliderContainer.addEventListener("mouseenter", () => {
@@ -410,14 +415,11 @@ if (sliderContainer) {
   });
 }
 
-// Handle window resize - recalculate positions to maintain smoothness
 let resizeTimeout;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(() => {
-    // Get current one set width after resize
     const oneSetWidth = getOneSetWidth();
-    // Ensure current position doesn't exceed bounds
     if (oneSetWidth > 0 && currentPosition >= oneSetWidth) {
       currentPosition = currentPosition % oneSetWidth;
       track.style.transform = `translateX(-${currentPosition}px)`;
@@ -425,17 +427,12 @@ window.addEventListener("resize", () => {
   }, 150);
 });
 
-// Start the infinite slider when page loads
 startSlider();
 
-// Also rebuild track if needed (ensures images are loaded and widths correct)
 window.addEventListener("load", () => {
-  // Small delay to ensure all images are rendered
   setTimeout(() => {
-    // Reset position to avoid any initial jump
     currentPosition = 0;
     track.style.transform = "translateX(0px)";
-    // Restart animation with fresh timestamps
     startSlider();
   }, 100);
 });
