@@ -20,7 +20,7 @@ body {
   color: #333;
 }
 
-/* HERO WITH VIDEO BACKGROUND */
+/* HERO WITH ROTATING BACKGROUND (VIDEO ↔ IMAGE) */
 .hero {
   height: 60vh;
   min-height: 500px;
@@ -44,9 +44,25 @@ body {
   transform: translateX(-50%) translateY(-50%);
   object-fit: cover;
   z-index: 0;
+  transition: opacity 0.5s ease-in-out;
 }
 
-/* DARK OVERLAY on top of video */
+/* BACKGROUND IMAGE */
+.hero-background-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translateX(-50%) translateY(-50%);
+  object-fit: cover;
+  z-index: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* DARK OVERLAY on top of video/image */
 .hero::before {
   content: "";
   position: absolute;
@@ -89,7 +105,7 @@ section {
   text-align: center;
 }
 
-/* EVENT + VIDEO + RSVP */
+/* EVENT + IMAGE + RSVP */
 .event-rsvp {
   display: flex;
   gap: 30px;
@@ -97,7 +113,7 @@ section {
   flex-wrap: wrap;
 }
 
-.event-details, .rsvp, .video-box {
+.event-details, .rsvp, .image-box {
   background: #c5e5ae;
   padding: 20px;
   border-radius: 10px;
@@ -106,12 +122,13 @@ section {
   box-shadow: 3px 3px 13px;
 }
 
-/* VIDEO */
-.video-box video {
+/* IMAGE BOX - Replaced video with image */
+.image-box img {
   width: 100%;
   aspect-ratio: 9/16;
   border-radius: 10px;
   object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .contact {
@@ -188,14 +205,15 @@ button {
 
 <body>
 
-<!-- HERO WITH VIDEO BACKGROUND -->
+<!-- HERO WITH ROTATING BACKGROUND -->
 <section class="hero">
-  <!-- Background Video - Replace the src with your own video file or URL -->
-  <video class="hero-video" autoplay loop muted playsinline>
+  <!-- Background Video -->
+  <video class="hero-video" id="heroVideo" autoplay muted playsinline>
     <source src="herovid.mp4" type="video/mp4">
-    <!-- Fallback: if video fails to load, you can add an image fallback -->
-    Your browser does not support the video tag.
   </video>
+  
+  <!-- Background Image (rotates with video) -->
+  <img class="hero-background-image" id="heroBackgroundImage" src="10.jpeg" alt="Wedding background">
   
   <div class="hero-content">
     <h1>Oyinkansola & Oluwadamilare</h1>
@@ -212,7 +230,7 @@ button {
   </div>
 </section>
 
-<!-- EVENT + VIDEO + RSVP -->
+<!-- EVENT + IMAGE + RSVP -->
 <section class="event-rsvp">
 
   <div class="event-details">
@@ -223,11 +241,11 @@ button {
     <p><strong>Venue:</strong> Hotel De Eskay Hall</p>
   </div>
 
-  <div class="video-box">
-    <h2>How to Get There</h2>
-    <video controls>
-      <source src="vid.mp4" type="video/mp4">
-    </video>
+  <!-- IMAGE BOX - Replaced the video with an image -->
+  <div class="image-box">
+   <!-- <h2></h2>-->
+    <img src="center.jpg" alt="Wedding venue direction map">
+    <!--<p style="margin-top: 12px; font-size: 0.85rem;">📍 Hotel De Eskay Hall - Easy access from main road</p>-->
   </div>
 
   <div class="rsvp">
@@ -309,6 +327,140 @@ function openDirections() {
 }
 
 // ============================================================
+// ROTATING HERO BACKGROUND - Video plays, switches to image, back to video
+// ============================================================
+const heroVideo = document.getElementById('heroVideo');
+const heroImage = document.getElementById('heroBackgroundImage');
+let isVideoActive = true;
+let rotationTimeout = null;
+let videoEndedHandler = null;
+let fallbackActive = false; // Track if we're in fallback mode due to error
+
+// Set initial states
+heroVideo.style.opacity = '1';
+heroImage.style.opacity = '0';
+heroVideo.style.display = 'block';
+heroImage.style.display = 'block';
+
+// Function to smoothly switch to image
+function switchToImage() {
+  if (fallbackActive) return; // Don't rotate if we're in error fallback mode
+  
+  isVideoActive = false;
+  heroVideo.style.opacity = '0';
+  heroImage.style.opacity = '1';
+  
+  // Pause the video while image is showing
+  heroVideo.pause();
+  
+  // After 3 seconds, switch back to video
+  if (rotationTimeout) clearTimeout(rotationTimeout);
+  rotationTimeout = setTimeout(() => {
+    if (!fallbackActive) {
+      switchToVideo();
+    }
+  }, 3000);
+}
+
+// Function to smoothly switch to video
+function switchToVideo() {
+  if (fallbackActive) return; // Don't rotate if we're in error fallback mode
+  
+  isVideoActive = true;
+  heroVideo.style.opacity = '1';
+  heroImage.style.opacity = '0';
+  
+  // Reload and play video from start
+  heroVideo.currentTime = 0;
+  heroVideo.play().catch(e => {
+    console.log('Video play failed:', e);
+    // If video fails to play, stay on image or handle gracefully
+    if (!fallbackActive) {
+      switchToImageFallback();
+    }
+  });
+}
+
+// Handle video end event - switch to image when video finishes
+function onVideoEnded() {
+  if (!fallbackActive && isVideoActive) {
+    switchToImage();
+  }
+}
+
+// Add event listener for video ending
+heroVideo.addEventListener('ended', onVideoEnded);
+
+// ============================================================
+// VIDEO FALLBACK - Show image if video fails to load completely
+// ============================================================
+
+// Function to switch to permanent image fallback (for video errors)
+function switchToImageFallback() {
+  fallbackActive = true;
+  
+  // Clear any pending rotation timeouts
+  if (rotationTimeout) clearTimeout(rotationTimeout);
+  
+  // Remove video ended listener to prevent further switching
+  heroVideo.removeEventListener('ended', onVideoEnded);
+  
+  // Hide video completely and show image
+  heroVideo.style.display = 'none';
+  heroImage.style.opacity = '1';
+  heroImage.style.display = 'block';
+  
+  console.log('Video failed - switched to permanent image fallback');
+}
+
+// Check if video can play properly
+if (heroVideo) {
+  // If video fails to load (network error, file missing, etc.)
+  heroVideo.addEventListener('error', function() {
+    console.log('Video failed to load, switching to permanent image fallback');
+    switchToImageFallback();
+  });
+  
+  // If video takes too long to load (5 seconds timeout)
+  const videoTimeout = setTimeout(function() {
+    if (heroVideo && heroVideo.readyState < 2 && !fallbackActive) { // readyState < 2 means not enough data
+      console.log('Video loading timeout, switching to permanent image fallback');
+      switchToImageFallback();
+    }
+  }, 5000);
+  
+  // If video loads successfully, clear the timeout and keep rotation
+  heroVideo.addEventListener('canplaythrough', function() {
+    clearTimeout(videoTimeout);
+    // Video loaded successfully - ensure normal rotation continues
+    if (!fallbackActive) {
+      heroVideo.style.display = 'block';
+      heroImage.style.display = 'block';
+    }
+  });
+  
+  // Also handle case where video source is invalid
+  const videoSources = heroVideo.getElementsByTagName('source');
+  for (let i = 0; i < videoSources.length; i++) {
+    videoSources[i].addEventListener('error', function() {
+      console.log('Video source error, switching to permanent image fallback');
+      switchToImageFallback();
+    });
+  }
+}
+
+// Start video playing when page loads
+window.addEventListener('load', () => {
+  heroVideo.play().catch(e => {
+    console.log('Autoplay prevented or video error:', e);
+    // If autoplay fails, switch to image fallback
+    if (!fallbackActive) {
+      switchToImageFallback();
+    }
+  });
+});
+
+// ============================================================
 // CONTINUOUS INFINITE IMAGE SLIDER - SEAMLESS LOOP
 // ============================================================
 
@@ -341,14 +493,6 @@ function buildInfiniteTrack() {
 }
 
 buildInfiniteTrack();
-
-function getImageFullWidth() {
-  const images = track.querySelectorAll("img");
-  if (images.length === 0) return 320;
-  const imgWidth = images[0].offsetWidth;
-  const gap = 20;
-  return imgWidth + gap;
-}
 
 function getOneSetWidth() {
   const images = track.querySelectorAll("img");
